@@ -1,2 +1,2 @@
 # crispy-notes
-2021 Senior Research Lab
+Notecard-based note-taking system web page
