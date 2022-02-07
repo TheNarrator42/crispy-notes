@@ -1,0 +1,25 @@
+.page-container {
+  text-align: center;
+  width: 100%;
+}
+
+.page-cards-container {
+  display: flex;
+}
+
+.pageview-text {
+  font-size: 30px;
+}
+
+.pageview-container {
+  text-align: center;
+  outline: 2px solid black;
+  margin: 5px;
+
+  width: 200px;
+  height: 200px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

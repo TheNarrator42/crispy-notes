@@ -1,0 +1,6 @@
+.book-container {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  padding: 20px;
+}
