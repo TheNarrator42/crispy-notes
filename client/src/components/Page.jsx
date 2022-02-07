@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import "../css/Page.css";
 import BackButton from "./BackButton";
@@ -9,6 +10,15 @@ const Page = (props) => {
   const [cards, setCards] = useState(props.cards); //object of objects
   const [expand, setExpand] = useState(false);
   const [display, setDisplay] = useState(false);
+
+  useHotkeys("z", () => {
+    console.log("props active: " + props.active);
+    console.log("id: " + props.id);
+    console.log("active: " + active);
+    if (props.active === props.id && active === -1) {
+      console.log(props.id + " z pressed!");
+    }
+  });
 
   const handleUpdateActive = (id) => {
     setActive(id);
@@ -42,10 +52,6 @@ const Page = (props) => {
     list[id]["titleValue"] = titleValue;
     list[id]["termlistValue"] = termlistValue;
     setCards(list);
-    console.log(value);
-    console.log(titleValue);
-    console.log(termlistValue);
-    console.log(cards);
   };
 
   if (expand) {
