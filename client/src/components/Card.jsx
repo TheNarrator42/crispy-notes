@@ -7,9 +7,6 @@ import "react-quill/dist/quill.snow.css";
 import BackButton from "./BackButton";
 
 const Card = (props) => {
-  const [titleValue, setTitleValue] = useState(props.titleValue);
-  const [value, setValue] = useState(props.value);
-  const [termlistValue, setTermlistValue] = useState(props.termlistValue);
   const [expand, setExpand] = useState(false);
   const [display, setDisplay] = useState(false);
 
@@ -46,10 +43,6 @@ const Card = (props) => {
     ],
   };
 
-  const handleDrag = (e, id, data) => {
-    props.handleDrag(id, data);
-  };
-
   if (expand) {
     return (
       <div className="card-full-container">
@@ -60,28 +53,22 @@ const Card = (props) => {
             cols="10"
             placeholder="title goes here..."
             onChange={(e) => {
-              setTitleValue(e.target.value);
+              props.setTitleValue(props.id, e.target.value);
             }}
-            value={titleValue}
+            value={props.titleValue}
           />
 
           <ReactQuill
             className="card-editor"
             theme="snow"
             modules={modules}
-            value={value}
-            onChange={setValue}
+            value={props.value}
+            onChange={(value) => props.setValue(props.id, value)}
           />
 
           <BackButton
             onClick={() => {
               props.handleUpdateActive(-1);
-              props.handleUpdatePage(
-                props.id,
-                value,
-                titleValue,
-                termlistValue
-              );
             }}
             visible={true}
           />
@@ -92,8 +79,8 @@ const Card = (props) => {
           rows="30"
           cols="5"
           placeholder="enter key terms here, 1 per line"
-          onChange={(e) => setTermlistValue(e.target.value)}
-          value={termlistValue}
+          onChange={(e) => props.setTermlistValue(props.id, e.target.value)}
+          value={props.termlistValue}
         />
       </div>
     );
@@ -101,7 +88,7 @@ const Card = (props) => {
     return (
       <Draggable
         handle="#handle"
-        onDrag={(e, data) => handleDrag(e, props.id, data)}
+        onDrag={(e, data) => props.handleDrag(props.id, data)}
       >
         <div
           style={{

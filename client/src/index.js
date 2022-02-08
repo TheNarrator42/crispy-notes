@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Card from './components/Card';
-import Page from './components/Page';
 import Book from './components/Book';
 
 ReactDOM.render(

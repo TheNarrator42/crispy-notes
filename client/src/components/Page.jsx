@@ -7,22 +7,17 @@ import Card from "./Card";
 
 const Page = (props) => {
   const [active, setActive] = useState(-1);
-  const [cards, setCards] = useState(props.cards); //object of objects
   const [expand, setExpand] = useState(false);
   const [display, setDisplay] = useState(false);
 
-  useHotkeys("z", () => {
-    console.log("props active: " + props.active);
-    console.log("id: " + props.id);
-    console.log("active: " + active);
-    if (props.active === props.id && active === -1) {
-      console.log(props.id + " z pressed!");
-    }
-  });
-
-  const handleUpdateActive = (id) => {
-    setActive(id);
-  };
+  // useHotkeys("z", () => {
+  //   console.log("props active: " + props.active);
+  //   console.log("id: " + props.id);
+  //   console.log("active: " + active);
+  //   if (props.active === props.id && active === -1) {
+  //     console.log(props.id + " z pressed!");
+  //   }
+  // });
 
   useEffect(() => {
     switch (props.active) {
@@ -39,19 +34,8 @@ const Page = (props) => {
     }
   }, [props.active]);
 
-  const handleDrag = (id, data) => {
-    let list = { ...cards };
-    list[id]["pos"]["x"] = data.x.toFixed(0);
-    list[id]["pos"]["y"] = data.y.toFixed(0);
-    setCards(list);
-  };
-
-  const handleUpdatePage = (id, value, titleValue, termlistValue) => {
-    let list = { ...cards };
-    list[id]["value"] = value;
-    list[id]["titleValue"] = titleValue;
-    list[id]["termlistValue"] = termlistValue;
-    setCards(list);
+  const handleUpdateActive = (id) => {
+    setActive(id);
   };
 
   if (expand) {
@@ -66,14 +50,18 @@ const Page = (props) => {
               title={card.title}
               color={card.color}
               pos={card.pos}
-              handleDrag={(id, data) => handleDrag(id, data)}
-              handleUpdateActive={(id) => handleUpdateActive(id)}
-              handleUpdatePage={(id, value, titleValue, termlistValue) =>
-                handleUpdatePage(id, value, titleValue, termlistValue)
-              }
               value={card.value}
               titleValue={card.titleValue}
               termlistValue={card.termlistValue}
+              setValue={(id, value) => props.setValue(props.id, id, value)}
+              setTitleValue={(id, titleValue) =>
+                props.setTitleValue(props.id, id, titleValue)
+              }
+              setTermlistValue={(id, termlistValue) =>
+                props.setTermlistValue(props.id, id, termlistValue)
+              }
+              handleDrag={(id, data) => props.handleDrag(props.id, id, data)}
+              handleUpdateActive={(id) => handleUpdateActive(id)}
             />
           </div>
         ))}
