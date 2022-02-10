@@ -9,24 +9,24 @@ ReactDOM.render(
   {id: 0, title: "Biology", cards: [
     {id: 0, title: "Mitochondria", color: "orange", pos: {
       x: 500, y: 500
-    }, value: "", titleValue: "", termlistValue: ""},
+    }, value: "", termlistValue: ""},
     {id: 1, title: "Chloroplast", color: "green", pos: {
       x: 1300, y: 200
-    }, value: "", titleValue: "", termlistValue: ""},
+    }, value: "", termlistValue: ""},
     {id: 2, title: "Nucleus", color: "blue", pos: {
       x: 40, y: 30
-    }, value: "", titleValue: "", termlistValue: ""}
+    }, value: "", termlistValue: ""}
   ]}, 
   {id: 1, title: "Chemistry", cards: [
     {id: 0, title: "Elements", color: "orange", pos: {
       x: 500, y: 500
-    }, value: "", titleValue: "", termlistValue: ""},
+    }, value: "", termlistValue: ""},
     {id: 1, title: "Compounds", color: "green", pos: {
       x: 1300, y: 200
-    }, value: "", titleValue: "", termlistValue: ""},
+    }, value: "", termlistValue: ""},
     {id: 2, title: "Experiments", color: "blue", pos: {
       x: 40, y: 30
-    }, value: "", titleValue: "", termlistValue: ""}
+    }, value: "", termlistValue: ""}
   ]}
   ]}
   />,

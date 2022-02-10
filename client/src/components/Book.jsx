@@ -1,4 +1,5 @@
 import { React, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import "../css/Book.css";
 import Page from "./Page";
@@ -6,6 +7,23 @@ import Page from "./Page";
 const Book = (props) => {
   const [active, setActive] = useState(-1);
   const [pages, setPages] = useState(props.pages);
+
+  useHotkeys(
+    "z",
+    () => {
+      let list = [...pages];
+      list.push({ id: pages.length, title: "", cards: [] });
+      setPages(list);
+    },
+    {},
+    [pages]
+  );
+
+  const handleSetPageTitle = (title, id) => {
+    const list = [...pages];
+    list[id]["title"] = title;
+    setPages(list);
+  };
 
   const handleUpdateActive = (id) => {
     setActive(id);
@@ -17,9 +35,9 @@ const Book = (props) => {
     setPages(list);
   };
 
-  const setTitleValue = (pageid, cardid, titleValue) => {
+  const setTitle = (pageid, cardid, title) => {
     const list = [...pages];
-    list[pageid]["cards"][cardid]["titleValue"] = titleValue;
+    list[pageid]["cards"][cardid]["title"] = title;
     setPages(list);
   };
 
@@ -30,18 +48,16 @@ const Book = (props) => {
   };
 
   const handleDrag = (pageid, cardid, data) => {
-    console.log(pages);
     const list = [...pages];
-    list[pageid]["cards"][cardid]["pos"]["x"] = data.x.toFixed(0);
-    list[pageid]["cards"][cardid]["pos"]["y"] = data.y.toFixed(0);
+    list[pageid]["cards"][cardid]["pos"]["x"] = Number(data.x.toFixed(0));
+    list[pageid]["cards"][cardid]["pos"]["y"] = Number(data.y.toFixed(0));
     setPages(list);
-    console.log(pages);
   };
 
   return (
     <div className="book-container">
       {props.title}
-      {props.pages.map((page) => (
+      {pages.map((page) => (
         <Page
           active={active}
           cards={page.cards}
@@ -50,9 +66,10 @@ const Book = (props) => {
           title={page.title}
           handleUpdateActive={handleUpdateActive}
           setValue={setValue}
-          setTitleValue={setTitleValue}
+          setTitle={setTitle}
           setTermlistValue={setTermlistValue}
           handleDrag={handleDrag}
+          handleSetPageTitle={handleSetPageTitle}
         />
       ))}
     </div>

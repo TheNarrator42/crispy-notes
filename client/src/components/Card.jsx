@@ -5,6 +5,7 @@ import Draggable from "react-draggable";
 import "../css/Card.css";
 import "react-quill/dist/quill.snow.css";
 import BackButton from "./BackButton";
+import { EditText } from "react-edit-text";
 
 const Card = (props) => {
   const [expand, setExpand] = useState(false);
@@ -23,7 +24,7 @@ const Card = (props) => {
         setDisplay(false);
         break;
     }
-  }, [props.active]);
+  }, [props.active, props.id]);
 
   const modules = {
     toolbar: [
@@ -47,15 +48,13 @@ const Card = (props) => {
     return (
       <div className="card-full-container">
         <div className="card-container">
-          <textarea
+          <EditText
             className="card-title"
-            rows="1"
-            cols="10"
             placeholder="title goes here..."
-            onChange={(e) => {
-              props.setTitleValue(props.id, e.target.value);
+            onSave={(title) => {
+              props.setTitle(props.id, title.value);
             }}
-            value={props.titleValue}
+            defaultValue={props.title}
           />
 
           <ReactQuill
@@ -89,14 +88,13 @@ const Card = (props) => {
       <Draggable
         handle="#handle"
         onDrag={(e, data) => props.handleDrag(props.id, data)}
+        axis="none"
+        position={{
+          x: props.pos["x"],
+          y: props.pos["y"],
+        }}
       >
-        <div
-          style={{
-            position: "absolute",
-            left: props.pos["x"],
-            top: props.pos["y"],
-          }}
-        >
+        <div>
           <div
             className="cardview-content"
             style={{
@@ -106,7 +104,14 @@ const Card = (props) => {
               props.handleUpdateActive(props.id);
             }}
           >
-            <div className="cardview-text">{props.title}</div>
+            <EditText
+              className="cardview-text"
+              placeholder="title goes here..."
+              onSave={(title) => {
+                props.setTitle(props.id, title.value);
+              }}
+              defaultValue={props.title}
+            />
           </div>
           <div className="triangle" id="handle" />
         </div>

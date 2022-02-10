@@ -1,23 +1,16 @@
 import { React, useState, useEffect } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
 
-import "../css/Page.css";
 import BackButton from "./BackButton";
 import Card from "./Card";
+import { EditText } from "react-edit-text";
+
+import "../css/Page.css";
+import "react-edit-text/dist/index.css";
 
 const Page = (props) => {
   const [active, setActive] = useState(-1);
   const [expand, setExpand] = useState(false);
   const [display, setDisplay] = useState(false);
-
-  // useHotkeys("z", () => {
-  //   console.log("props active: " + props.active);
-  //   console.log("id: " + props.id);
-  //   console.log("active: " + active);
-  //   if (props.active === props.id && active === -1) {
-  //     console.log(props.id + " z pressed!");
-  //   }
-  // });
 
   useEffect(() => {
     switch (props.active) {
@@ -32,7 +25,7 @@ const Page = (props) => {
         setDisplay(false);
         break;
     }
-  }, [props.active]);
+  }, [props.active, expand, display, props.id]);
 
   const handleUpdateActive = (id) => {
     setActive(id);
@@ -41,7 +34,15 @@ const Page = (props) => {
   if (expand) {
     return (
       <div className="page-container">
-        {active === -1 && props.title}
+        {active === -1 && (
+          <EditText
+            placeholder="title me!"
+            defaultValue={props.title}
+            onSave={(title) => {
+              props.handleSetPageTitle(title.value, props.id);
+            }}
+          />
+        )}
         {props.cards.map((card) => (
           <div key={card.id} className="page-cards-container">
             <Card
@@ -51,12 +52,9 @@ const Page = (props) => {
               color={card.color}
               pos={card.pos}
               value={card.value}
-              titleValue={card.titleValue}
               termlistValue={card.termlistValue}
               setValue={(id, value) => props.setValue(props.id, id, value)}
-              setTitleValue={(id, titleValue) =>
-                props.setTitleValue(props.id, id, titleValue)
-              }
+              setTitle={(id, title) => props.setTitle(props.id, id, title)}
               setTermlistValue={(id, termlistValue) =>
                 props.setTermlistValue(props.id, id, termlistValue)
               }
@@ -75,14 +73,20 @@ const Page = (props) => {
     );
   } else if (display) {
     return (
-      <div
-        className="pageview-container"
-        onClick={() => {
-          props.handleUpdateActive(props.id);
-        }}
-      >
-        <div className="pageview-text">{props.title}</div>
+      <div className="pageview-container">
+        <div className="pageview-text">
+          <EditText
+            placeholder="title me!"
+            defaultValue={props.title}
+            onSave={(title) => {
+              props.handleSetPageTitle(title.value, props.id);
+            }}
+          />
+        </div>
         <div
+          onClick={() => {
+            props.handleUpdateActive(props.id);
+          }}
           style={{ backgroundColor: "violet", width: "100%", height: "100%" }}
         />
       </div>
