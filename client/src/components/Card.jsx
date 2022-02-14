@@ -84,6 +84,8 @@ const Card = (props) => {
       </div>
     );
   } else if (display) {
+    console.log(props.pos["x"]);
+    console.log(props.pos["y"]);
     return (
       <Draggable
         handle="#handle"
@@ -93,6 +95,7 @@ const Card = (props) => {
           x: props.pos["x"],
           y: props.pos["y"],
         }}
+        bounds={"body"}
       >
         <div>
           <div
@@ -100,8 +103,10 @@ const Card = (props) => {
             style={{
               backgroundColor: props.color ? props.color : "blue",
             }}
-            onClick={() => {
-              props.handleUpdateActive(props.id);
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                props.handleUpdateActive(props.id);
+              }
             }}
           >
             <EditText
@@ -112,8 +117,8 @@ const Card = (props) => {
               }}
               defaultValue={props.title}
             />
+            <div className="triangle" id="handle" />
           </div>
-          <div className="triangle" id="handle" />
         </div>
       </Draggable>
     );

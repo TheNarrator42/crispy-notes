@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import BackButton from "./BackButton";
 import Card from "./Card";
@@ -27,6 +28,15 @@ const Page = (props) => {
     }
   }, [props.active, expand, display, props.id]);
 
+  useHotkeys(
+    "z",
+    () => {
+      props.handleAddCard(props.id);
+    },
+    { enabled: props.active === props.id && active === -1 },
+    [active, props.pages, props.active]
+  );
+
   const handleUpdateActive = (id) => {
     setActive(id);
   };
@@ -44,8 +54,9 @@ const Page = (props) => {
           />
         )}
         {props.cards.map((card) => (
-          <div key={card.id} className="page-cards-container">
+          <div key={card.id} className="cardview-container">
             <Card
+              key={card.id}
               active={active}
               id={card.id}
               title={card.title}

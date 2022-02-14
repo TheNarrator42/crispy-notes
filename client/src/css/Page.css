@@ -3,8 +3,10 @@
   width: 100%;
 }
 
-.page-cards-container {
+.cardview-container {
   display: flex;
+  width: 0;
+  height: 0;
 }
 
 .pageview-text {

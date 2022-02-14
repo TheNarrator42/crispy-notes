@@ -7,6 +7,17 @@ import Page from "./Page";
 const Book = (props) => {
   const [active, setActive] = useState(-1);
   const [pages, setPages] = useState(props.pages);
+  // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // useEffect(() => {
+  //   const onMouseMove = (e) => {
+  //     setMousePos({
+  //       x: e.clientX,
+  //       y: e.clientY,
+  //     });
+  //   };
+  //   window.addEventListener("mousemove", onMouseMove);
+  // }, []);
 
   useHotkeys(
     "z",
@@ -15,8 +26,8 @@ const Book = (props) => {
       list.push({ id: pages.length, title: "", cards: [] });
       setPages(list);
     },
-    {},
-    [pages]
+    { enabled: active === -1 },
+    [pages, active]
   );
 
   const handleSetPageTitle = (title, id) => {
@@ -27,6 +38,22 @@ const Book = (props) => {
 
   const handleUpdateActive = (id) => {
     setActive(id);
+  };
+
+  const handleAddCard = (pageid) => {
+    let list = [...pages];
+    list[pageid]["cards"].push({
+      id: list[pageid]["cards"].length,
+      title: "",
+      color: "yellow",
+      pos: {
+        x: 0,
+        y: 0,
+      },
+      value: "",
+      termlistValue: "",
+    });
+    setPages(list);
   };
 
   const setValue = (pageid, cardid, value) => {
@@ -70,6 +97,7 @@ const Book = (props) => {
           setTermlistValue={setTermlistValue}
           handleDrag={handleDrag}
           handleSetPageTitle={handleSetPageTitle}
+          handleAddCard={handleAddCard}
         />
       ))}
     </div>
