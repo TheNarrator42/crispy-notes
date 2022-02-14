@@ -111,7 +111,7 @@ const Book = (props) => {
           handleAddCard={handleAddCard}
         />
       ))}
-      <Pagination>{toolbar}</Pagination>
+      {/* <Pagination>{toolbar}</Pagination> */}
     </div>
   );
 };
