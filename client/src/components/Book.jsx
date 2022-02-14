@@ -1,5 +1,6 @@
 import { React, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import Pagination from "react-bootstrap/Pagination";
 
 import "../css/Book.css";
 import Page from "./Page";
@@ -7,6 +8,7 @@ import Page from "./Page";
 const Book = (props) => {
   const [active, setActive] = useState(-1);
   const [pages, setPages] = useState(props.pages);
+  const [option, setOption] = useState(0);
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // useEffect(() => {
@@ -18,6 +20,15 @@ const Book = (props) => {
   //   };
   //   window.addEventListener("mousemove", onMouseMove);
   // }, []);
+
+  const toolbar = [
+    <Pagination.Item key={0} active={option === 0}>
+      {"zero"}
+    </Pagination.Item>,
+    <Pagination.Item key={1} active={option === 1}>
+      {"one"}
+    </Pagination.Item>,
+  ];
 
   useHotkeys(
     "z",
@@ -100,6 +111,7 @@ const Book = (props) => {
           handleAddCard={handleAddCard}
         />
       ))}
+      <Pagination>{toolbar}</Pagination>
     </div>
   );
 };
