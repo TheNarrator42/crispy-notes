@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Pagination from "react-bootstrap/Pagination";
 import { FaMousePointer, FaPlus, FaTrashAlt } from "react-icons/fa";
@@ -45,43 +45,67 @@ const Book = (props) => {
     setOption(3);
   });
 
+  useHotkeys(
+    "z",
+    () => {
+      console.log(pages);
+    },
+    {},
+    [pages]
+  );
+
   const handleSetPageTitle = (title, id) => {
-    const list = [...pages];
+    let list = [...pages];
     list[id]["title"] = title;
     setPages(list);
   };
 
-  const handleUpdateActive = (id) => {
-    setActive(id);
+  const handlePageviewClick = (id) => {
+    if (option === 3 && id !== -1) {
+      let list = [...pages];
+      list = list.filter((page) => page.id !== id);
+      list = list.map((page) => ({
+        id: page.id > id ? page.id - 1 : page.id,
+        title: page.title,
+        cards: page.cards,
+      }));
+      setPages(list);
+    } else {
+      setActive(id);
+    }
   };
 
   const setValue = (pageid, cardid, value) => {
-    const list = [...pages];
+    let list = [...pages];
     list[pageid]["cards"][cardid]["value"] = value;
     setPages(list);
   };
 
   const setTitle = (pageid, cardid, title) => {
-    const list = [...pages];
+    let list = [...pages];
     list[pageid]["cards"][cardid]["title"] = title;
     setPages(list);
   };
 
   const setTermlistValue = (pageid, cardid, termlistValue) => {
-    const list = [...pages];
+    let list = [...pages];
     list[pageid]["cards"][cardid]["termlistValue"] = termlistValue;
     setPages(list);
   };
 
   const handleDrag = (pageid, cardid, data) => {
-    const list = [...pages];
+    let list = [...pages];
     list[pageid]["cards"][cardid]["pos"]["x"] = Number(data.x.toFixed(0));
     list[pageid]["cards"][cardid]["pos"]["y"] = Number(data.y.toFixed(0));
     setPages(list);
   };
 
   const onBackgroundClick = (e) => {
-    if (option === 2 && e.target === e.currentTarget) {
+    if (
+      option === 2 &&
+      (e.target.className === "book-container" ||
+        e.target.className === "page-container")
+    ) {
       let list = [...pages];
       if (active === -1) {
         list.push({ id: pages.length, title: "", cards: [] });
@@ -113,7 +137,7 @@ const Book = (props) => {
             id={page.id}
             key={page.id}
             title={page.title}
-            handleUpdateActive={handleUpdateActive}
+            handlePageviewClick={handlePageviewClick}
             setValue={setValue}
             setTitle={setTitle}
             setTermlistValue={setTermlistValue}

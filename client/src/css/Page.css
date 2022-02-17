@@ -10,6 +10,7 @@
 }
 
 .pageview-text {
+  display: flex;
   font-size: 30px;
 }
 
@@ -24,4 +25,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.pageview-close {
+  top: 0;
+  right: 0;
 }

@@ -66,7 +66,7 @@ const Page = (props) => {
         ))}
         <BackButton
           onClick={() => {
-            props.handleUpdateActive(-1);
+            props.handlePageviewClick(-1);
           }}
           visible={active === -1}
         />
@@ -86,7 +86,7 @@ const Page = (props) => {
         </div>
         <div
           onClick={() => {
-            props.handleUpdateActive(props.id);
+            props.handlePageviewClick(props.id);
           }}
           style={{ backgroundColor: "violet", width: "100%", height: "100%" }}
         />
