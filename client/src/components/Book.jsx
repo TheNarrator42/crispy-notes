@@ -1,6 +1,8 @@
 import { React, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Pagination from "react-bootstrap/Pagination";
+import { FaMousePointer, FaPlus, FaTrashAlt } from "react-icons/fa";
+import PageItem from "react-bootstrap/PageItem";
 
 import "../css/Book.css";
 import Page from "./Page";
@@ -8,7 +10,7 @@ import Page from "./Page";
 const Book = (props) => {
   const [active, setActive] = useState(-1);
   const [pages, setPages] = useState(props.pages);
-  const [option, setOption] = useState(0);
+  const [option, setOption] = useState(1);
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // useEffect(() => {
@@ -22,24 +24,26 @@ const Book = (props) => {
   // }, []);
 
   const toolbar = [
-    <Pagination.Item key={0} active={option === 0}>
-      {"zero"}
-    </Pagination.Item>,
-    <Pagination.Item key={1} active={option === 1}>
-      {"one"}
-    </Pagination.Item>,
+    <PageItem key={1} active={option === 1} onClick={() => setOption(1)}>
+      {<FaMousePointer size={"1.5em"} />}
+    </PageItem>,
+    <PageItem key={2} active={option === 2} onClick={() => setOption(2)}>
+      {<FaPlus size={"1.5em"} />}
+    </PageItem>,
+    <PageItem key={3} active={option === 3} onClick={() => setOption(3)}>
+      {<FaTrashAlt size={"1.5em"} />}
+    </PageItem>,
   ];
 
-  useHotkeys(
-    "z",
-    () => {
-      let list = [...pages];
-      list.push({ id: pages.length, title: "", cards: [] });
-      setPages(list);
-    },
-    { enabled: active === -1 },
-    [pages, active]
-  );
+  useHotkeys("1", () => {
+    setOption(1);
+  });
+  useHotkeys("2", () => {
+    setOption(2);
+  });
+  useHotkeys("3", () => {
+    setOption(3);
+  });
 
   const handleSetPageTitle = (title, id) => {
     const list = [...pages];
@@ -49,22 +53,6 @@ const Book = (props) => {
 
   const handleUpdateActive = (id) => {
     setActive(id);
-  };
-
-  const handleAddCard = (pageid) => {
-    let list = [...pages];
-    list[pageid]["cards"].push({
-      id: list[pageid]["cards"].length,
-      title: "",
-      color: "yellow",
-      pos: {
-        x: 0,
-        y: 0,
-      },
-      value: "",
-      termlistValue: "",
-    });
-    setPages(list);
   };
 
   const setValue = (pageid, cardid, value) => {
@@ -92,26 +80,49 @@ const Book = (props) => {
     setPages(list);
   };
 
+  const onBackgroundClick = (e) => {
+    if (option === 2 && e.target === e.currentTarget) {
+      let list = [...pages];
+      if (active === -1) {
+        list.push({ id: pages.length, title: "", cards: [] });
+      } else {
+        list[active]["cards"].push({
+          id: list[active]["cards"].length,
+          title: "",
+          color: "yellow",
+          pos: {
+            x: 0,
+            y: 0,
+          },
+          value: "",
+          termlistValue: "",
+        });
+      }
+      setPages(list);
+    }
+  };
+
   return (
-    <div className="book-container">
-      {props.title}
-      {pages.map((page) => (
-        <Page
-          active={active}
-          cards={page.cards}
-          id={page.id}
-          key={page.id}
-          title={page.title}
-          handleUpdateActive={handleUpdateActive}
-          setValue={setValue}
-          setTitle={setTitle}
-          setTermlistValue={setTermlistValue}
-          handleDrag={handleDrag}
-          handleSetPageTitle={handleSetPageTitle}
-          handleAddCard={handleAddCard}
-        />
-      ))}
-      {/* <Pagination>{toolbar}</Pagination> */}
+    <div className="full-container">
+      <div className="book-container" onClick={onBackgroundClick}>
+        {props.title}
+        {pages.map((page) => (
+          <Page
+            active={active}
+            cards={page.cards}
+            id={page.id}
+            key={page.id}
+            title={page.title}
+            handleUpdateActive={handleUpdateActive}
+            setValue={setValue}
+            setTitle={setTitle}
+            setTermlistValue={setTermlistValue}
+            handleDrag={handleDrag}
+            handleSetPageTitle={handleSetPageTitle}
+          />
+        ))}
+      </div>
+      <Pagination>{toolbar}</Pagination>
     </div>
   );
 };
