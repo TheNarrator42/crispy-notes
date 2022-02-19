@@ -1,7 +1,7 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Pagination from "react-bootstrap/Pagination";
-import { FaMousePointer, FaPlus, FaTrashAlt } from "react-icons/fa";
+import { FaMousePointer, FaPlus, FaSlash, FaTrashAlt } from "react-icons/fa";
 import PageItem from "react-bootstrap/PageItem";
 
 import "../css/Book.css";
@@ -9,6 +9,7 @@ import Page from "./Page";
 
 const Book = (props) => {
   const [active, setActive] = useState(-1);
+  const [pageActive, setPageActive] = useState(false);
   const [pages, setPages] = useState(props.pages);
   const [option, setOption] = useState(1);
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -27,23 +28,65 @@ const Book = (props) => {
     <PageItem key={1} active={option === 1} onClick={() => setOption(1)}>
       {<FaMousePointer size={"1.5em"} />}
     </PageItem>,
-    <PageItem key={2} active={option === 2} onClick={() => setOption(2)}>
+    <PageItem
+      key={2}
+      active={option === 2}
+      disabled={pageActive}
+      onClick={() => setOption(2)}
+    >
       {<FaPlus size={"1.5em"} />}
     </PageItem>,
-    <PageItem key={3} active={option === 3} onClick={() => setOption(3)}>
+    <PageItem
+      key={3}
+      active={option === 3}
+      disabled={pageActive}
+      onClick={() => setOption(3)}
+    >
       {<FaTrashAlt size={"1.5em"} />}
+    </PageItem>,
+    <PageItem
+      key={4}
+      active={option === 4}
+      disabled={pageActive}
+      onClick={() => setOption(4)}
+    >
+      {<FaSlash size={"1.5em"} />}
     </PageItem>,
   ];
 
   useHotkeys("1", () => {
     setOption(1);
   });
-  useHotkeys("2", () => {
-    setOption(2);
-  });
-  useHotkeys("3", () => {
-    setOption(3);
-  });
+  useHotkeys(
+    "2",
+    () => {
+      if (!pageActive) {
+        setOption(2);
+      }
+    },
+    {},
+    [pageActive]
+  );
+  useHotkeys(
+    "3",
+    () => {
+      if (!pageActive) {
+        setOption(3);
+      }
+    },
+    {},
+    [pageActive]
+  );
+  useHotkeys(
+    "4",
+    () => {
+      if (!pageActive) {
+        setOption(4);
+      }
+    },
+    {},
+    [pageActive]
+  );
 
   useHotkeys(
     "z",
@@ -54,9 +97,31 @@ const Book = (props) => {
     [pages]
   );
 
+  const handleUpdatePageActive = (value) => {
+    if (value !== -1) {
+      setOption(1);
+    }
+    setPageActive(value === -1 ? false : true);
+  };
+
   const handleSetPageTitle = (title, id) => {
     let list = [...pages];
     list[id]["title"] = title;
+    setPages(list);
+  };
+
+  const handleDeleteCard = (pageid, id) => {
+    let list = [...pages];
+    list[pageid].cards = list[pageid].cards.filter((card) => card.id !== id);
+    list[pageid].cards = list[pageid].cards.map((card) => ({
+      id: card.id > id ? card.id - 1 : card.id,
+      title: card.title,
+      color: card.color,
+      pos: card.pos,
+      value: card.value,
+      termlistValue: card.termlistValue,
+    }));
+    console.log(list);
     setPages(list);
   };
 
@@ -69,6 +134,7 @@ const Book = (props) => {
         title: page.title,
         cards: page.cards,
       }));
+      console.log(list);
       setPages(list);
     } else {
       setActive(id);
@@ -143,6 +209,9 @@ const Book = (props) => {
             setTermlistValue={setTermlistValue}
             handleDrag={handleDrag}
             handleSetPageTitle={handleSetPageTitle}
+            handleDeleteCard={handleDeleteCard}
+            handleUpdatePageActive={handleUpdatePageActive}
+            option={option}
           />
         ))}
       </div>

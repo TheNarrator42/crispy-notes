@@ -67,7 +67,7 @@ const Card = (props) => {
 
           <BackButton
             onClick={() => {
-              props.handleUpdateActive(-1);
+              props.handleCardviewClick(-1);
             }}
             visible={true}
           />
@@ -99,15 +99,16 @@ const Card = (props) => {
           <div
             className="cardview-content"
             style={{
-              backgroundColor: props.color ? props.color : "blue",
+              backgroundColor: props.color,
             }}
             onClick={(e) => {
               if (e.target === e.currentTarget) {
-                props.handleUpdateActive(props.id);
+                props.handleCardviewClick(props.id);
               }
             }}
           >
             <EditText
+              key={props.title}
               className="cardview-text"
               placeholder="title goes here..."
               onSave={(title) => {

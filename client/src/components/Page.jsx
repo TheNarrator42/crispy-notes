@@ -27,8 +27,15 @@ const Page = (props) => {
     }
   }, [props.active, expand, display, props.id]);
 
-  const handleUpdateActive = (id) => {
-    setActive(id);
+  // useeffect props.option?
+
+  const handleCardviewClick = (id) => {
+    if (props.option === 3 && id !== -1) {
+      props.handleDeleteCard(props.id, id);
+    } else {
+      setActive(id);
+      props.handleUpdatePageActive(id);
+    }
   };
 
   if (expand) {
@@ -60,7 +67,7 @@ const Page = (props) => {
                 props.setTermlistValue(props.id, id, termlistValue)
               }
               handleDrag={(id, data) => props.handleDrag(props.id, id, data)}
-              handleUpdateActive={(id) => handleUpdateActive(id)}
+              handleCardviewClick={(id) => handleCardviewClick(id)}
             />
           </div>
         ))}
@@ -77,6 +84,7 @@ const Page = (props) => {
       <div className="pageview-container">
         <div className="pageview-text">
           <EditText
+            key={props.title}
             placeholder="title me!"
             defaultValue={props.title}
             onSave={(title) => {
