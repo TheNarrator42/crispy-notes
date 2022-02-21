@@ -17,7 +17,7 @@ ReactDOM.render(
     {id: 2, title: "Nucleus", color: "blue", pos: {
       x: 40, y: 30
     }, value: "", termlistValue: ""}
-  ]}, 
+  ], lines: [[0, 1], [0, 2], [1, 2]]}, 
   {id: 1, title: "Chemistry", cards: [
     {id: 0, title: "Elements", color: "orange", pos: {
       x: 500, y: 500
@@ -28,7 +28,7 @@ ReactDOM.render(
     {id: 2, title: "Experiments", color: "blue", pos: {
       x: 40, y: 30
     }, value: "", termlistValue: ""}
-  ]}
+  ], lines: []}
   ]}
   />,
 

@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Pagination from "react-bootstrap/Pagination";
 import { FaMousePointer, FaPlus, FaSlash, FaTrashAlt } from "react-icons/fa";
@@ -12,6 +12,7 @@ const Book = (props) => {
   const [pageActive, setPageActive] = useState(false);
   const [pages, setPages] = useState(props.pages);
   const [option, setOption] = useState(1);
+  const [makingLine, setMakingLine] = useState(false);
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // useEffect(() => {
@@ -23,6 +24,12 @@ const Book = (props) => {
   //   };
   //   window.addEventListener("mousemove", onMouseMove);
   // }, []);
+
+  useEffect(() => {
+    if (active === -1 || pageActive) {
+      setMakingLine(false);
+    }
+  }, [active, pageActive]);
 
   const toolbar = [
     <PageItem key={1} active={option === 1} onClick={() => setOption(1)}>
@@ -47,7 +54,7 @@ const Book = (props) => {
     <PageItem
       key={4}
       active={option === 4}
-      disabled={pageActive}
+      disabled={active === -1 || pageActive}
       onClick={() => setOption(4)}
     >
       {<FaSlash size={"1.5em"} />}
@@ -80,12 +87,12 @@ const Book = (props) => {
   useHotkeys(
     "4",
     () => {
-      if (!pageActive) {
+      if (!pageActive && active !== -1) {
         setOption(4);
       }
     },
     {},
-    [pageActive]
+    [pageActive, active]
   );
 
   useHotkeys(
@@ -126,18 +133,24 @@ const Book = (props) => {
   };
 
   const handlePageviewClick = (id) => {
-    if (option === 3 && id !== -1) {
-      let list = [...pages];
-      list = list.filter((page) => page.id !== id);
-      list = list.map((page) => ({
-        id: page.id > id ? page.id - 1 : page.id,
-        title: page.title,
-        cards: page.cards,
-      }));
-      console.log(list);
-      setPages(list);
-    } else {
+    if (id === -1) {
       setActive(id);
+    } else {
+      if (option === 3) {
+        let list = [...pages];
+        list = list.filter((page) => page.id !== id);
+        list = list.map((page) => ({
+          id: page.id > id ? page.id - 1 : page.id,
+          title: page.title,
+          cards: page.cards,
+        }));
+        console.log(list);
+        setPages(list);
+      } else if (option === 4) {
+        // do things here
+      } else {
+        setActive(id);
+      }
     }
   };
 
@@ -195,24 +208,38 @@ const Book = (props) => {
   return (
     <div className="full-container">
       <div className="book-container" onClick={onBackgroundClick}>
-        {props.title}
+        {active !== -1 && !pageActive && (
+          <svg className="lines-container" height="100vh" width="100vw">
+            {pages[active].lines.map((line) => (
+              <line
+                x1={pages[active].cards[line[0]].pos.x + 186}
+                y1={pages[active].cards[line[0]].pos.y + 160}
+                x2={pages[active].cards[line[1]].pos.x + 186}
+                y2={pages[active].cards[line[1]].pos.y + 160}
+                style={{ stroke: "red", strokeWidth: 2 }}
+              />
+            ))}
+          </svg>
+        )}
         {pages.map((page) => (
-          <Page
-            active={active}
-            cards={page.cards}
-            id={page.id}
-            key={page.id}
-            title={page.title}
-            handlePageviewClick={handlePageviewClick}
-            setValue={setValue}
-            setTitle={setTitle}
-            setTermlistValue={setTermlistValue}
-            handleDrag={handleDrag}
-            handleSetPageTitle={handleSetPageTitle}
-            handleDeleteCard={handleDeleteCard}
-            handleUpdatePageActive={handleUpdatePageActive}
-            option={option}
-          />
+          <>
+            <Page
+              active={active}
+              cards={page.cards}
+              id={page.id}
+              key={page.id}
+              title={page.title}
+              handlePageviewClick={handlePageviewClick}
+              setValue={setValue}
+              setTitle={setTitle}
+              setTermlistValue={setTermlistValue}
+              handleDrag={handleDrag}
+              handleSetPageTitle={handleSetPageTitle}
+              handleDeleteCard={handleDeleteCard}
+              handleUpdatePageActive={handleUpdatePageActive}
+              option={option}
+            />
+          </>
         ))}
       </div>
       <Pagination>{toolbar}</Pagination>
