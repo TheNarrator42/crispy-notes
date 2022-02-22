@@ -49,6 +49,11 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   max-width: fit-content;
+  color: rgb(255, 255, 255);
+}
+
+.cardview-text:focus-within {
+  color: black;
 }
 
 .triangle {

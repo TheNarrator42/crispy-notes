@@ -30,11 +30,18 @@ const Page = (props) => {
   // useeffect props.option?
 
   const handleCardviewClick = (id) => {
-    if (props.option === 3 && id !== -1) {
-      props.handleDeleteCard(props.id, id);
-    } else {
+    if (id === -1) {
       setActive(id);
       props.handleUpdatePageActive(id);
+    } else {
+      if (props.option === 3) {
+        props.handleDeleteCard(props.id, id);
+      } else if (props.option === 4) {
+        props.handleLine(props.id, id);
+      } else {
+        setActive(id);
+        props.handleUpdatePageActive(id);
+      }
     }
   };
 
@@ -42,13 +49,15 @@ const Page = (props) => {
     return (
       <div className="page-container">
         {active === -1 && (
-          <EditText
-            placeholder="title me!"
-            defaultValue={props.title}
-            onSave={(title) => {
-              props.handleSetPageTitle(title.value, props.id);
-            }}
-          />
+          <div className="page-title">
+            <EditText
+              placeholder="title me!"
+              defaultValue={props.title}
+              onSave={(title) => {
+                props.handleSetPageTitle(title.value, props.id);
+              }}
+            />
+          </div>
         )}
         {props.cards.map((card) => (
           <div key={card.id} className="cardview-container">
@@ -93,10 +102,10 @@ const Page = (props) => {
           />
         </div>
         <div
+          className="pageview-body"
           onClick={() => {
             props.handlePageviewClick(props.id);
           }}
-          style={{ backgroundColor: "violet", width: "100%", height: "100%" }}
         />
       </div>
     );

@@ -12,7 +12,7 @@ const Book = (props) => {
   const [pageActive, setPageActive] = useState(false);
   const [pages, setPages] = useState(props.pages);
   const [option, setOption] = useState(1);
-  const [makingLine, setMakingLine] = useState(false);
+  const [makingLine, setMakingLine] = useState([0, -1]);
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // useEffect(() => {
@@ -27,13 +27,13 @@ const Book = (props) => {
 
   useEffect(() => {
     if (active === -1 || pageActive) {
-      setMakingLine(false);
+      setMakingLine([0, -1]);
     }
   }, [active, pageActive]);
 
   const toolbar = [
     <PageItem key={1} active={option === 1} onClick={() => setOption(1)}>
-      {<FaMousePointer size={"1.5em"} />}
+      {<FaMousePointer size="1.5em" />}
     </PageItem>,
     <PageItem
       key={2}
@@ -41,7 +41,7 @@ const Book = (props) => {
       disabled={pageActive}
       onClick={() => setOption(2)}
     >
-      {<FaPlus size={"1.5em"} />}
+      {<FaPlus size="1.5em" />}
     </PageItem>,
     <PageItem
       key={3}
@@ -49,7 +49,7 @@ const Book = (props) => {
       disabled={pageActive}
       onClick={() => setOption(3)}
     >
-      {<FaTrashAlt size={"1.5em"} />}
+      {<FaTrashAlt size="1.5em" />}
     </PageItem>,
     <PageItem
       key={4}
@@ -57,9 +57,18 @@ const Book = (props) => {
       disabled={active === -1 || pageActive}
       onClick={() => setOption(4)}
     >
-      {<FaSlash size={"1.5em"} />}
+      {<FaSlash size="1.5em" />}
     </PageItem>,
   ];
+
+  useHotkeys(
+    "z",
+    () => {
+      console.log(pages);
+    },
+    {},
+    [pages]
+  );
 
   useHotkeys("1", () => {
     setOption(1);
@@ -93,15 +102,6 @@ const Book = (props) => {
     },
     {},
     [pageActive, active]
-  );
-
-  useHotkeys(
-    "z",
-    () => {
-      console.log(pages);
-    },
-    {},
-    [pages]
   );
 
   const handleUpdatePageActive = (value) => {
@@ -146,11 +146,20 @@ const Book = (props) => {
         }));
         console.log(list);
         setPages(list);
-      } else if (option === 4) {
-        // do things here
       } else {
         setActive(id);
       }
+    }
+  };
+
+  const handleLine = (pageid, id) => {
+    if (makingLine[0] === 0) {
+      setMakingLine([1, id]);
+    } else {
+      const list = [...pages];
+      list[pageid].lines.push([makingLine[1], id]);
+      setPages(list);
+      setMakingLine([0, -1]);
     }
   };
 
@@ -212,6 +221,7 @@ const Book = (props) => {
           <svg className="lines-container" height="100vh" width="100vw">
             {pages[active].lines.map((line) => (
               <line
+                key={[line[0], line[1]]}
                 x1={pages[active].cards[line[0]].pos.x + 186}
                 y1={pages[active].cards[line[0]].pos.y + 160}
                 x2={pages[active].cards[line[1]].pos.x + 186}
@@ -222,24 +232,23 @@ const Book = (props) => {
           </svg>
         )}
         {pages.map((page) => (
-          <>
-            <Page
-              active={active}
-              cards={page.cards}
-              id={page.id}
-              key={page.id}
-              title={page.title}
-              handlePageviewClick={handlePageviewClick}
-              setValue={setValue}
-              setTitle={setTitle}
-              setTermlistValue={setTermlistValue}
-              handleDrag={handleDrag}
-              handleSetPageTitle={handleSetPageTitle}
-              handleDeleteCard={handleDeleteCard}
-              handleUpdatePageActive={handleUpdatePageActive}
-              option={option}
-            />
-          </>
+          <Page
+            active={active}
+            cards={page.cards}
+            id={page.id}
+            key={page.id}
+            title={page.title}
+            handlePageviewClick={handlePageviewClick}
+            handleLine={handleLine}
+            setValue={setValue}
+            setTitle={setTitle}
+            setTermlistValue={setTermlistValue}
+            handleDrag={handleDrag}
+            handleSetPageTitle={handleSetPageTitle}
+            handleDeleteCard={handleDeleteCard}
+            handleUpdatePageActive={handleUpdatePageActive}
+            option={option}
+          />
         ))}
       </div>
       <Pagination>{toolbar}</Pagination>

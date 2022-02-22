@@ -1,4 +1,7 @@
 import { React, useState, useEffect } from "react";
+import { FaArrowLeft } from "react-icons/fa";
+
+import "../css/BackButton.css";
 
 const BackButton = (props) => {
   const [visible, setVisible] = useState(true);
@@ -9,16 +12,9 @@ const BackButton = (props) => {
 
   return (
     visible && (
-      <div
-        style={{
-          background: "red",
-          height: "50px",
-          width: "50px",
-          position: "absolute",
-          bottom: "20px",
-        }}
-        onClick={props.onClick}
-      ></div>
+      <div className="backbutton" onClick={props.onClick}>
+        <FaArrowLeft size="1.5em" />
+      </div>
     )
   );
 };
