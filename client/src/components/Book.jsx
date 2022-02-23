@@ -70,6 +70,15 @@ const Book = (props) => {
     [pages]
   );
 
+  useHotkeys(
+    "x",
+    () => {
+      console.log(makingLine);
+    },
+    {},
+    [makingLine]
+  );
+
   useHotkeys("1", () => {
     setOption(1);
   });
@@ -144,7 +153,6 @@ const Book = (props) => {
           title: page.title,
           cards: page.cards,
         }));
-        console.log(list);
         setPages(list);
       } else {
         setActive(id);
@@ -157,10 +165,24 @@ const Book = (props) => {
       setMakingLine([1, id]);
     } else {
       const list = [...pages];
-      list[pageid].lines.push([makingLine[1], id]);
-      setPages(list);
-      setMakingLine([0, -1]);
+      if (!duplicateLine(pageid, makingLine[1], id)) {
+        list[pageid].lines.push([makingLine[1], id]);
+        setPages(list);
+        setMakingLine([0, -1]);
+      }
     }
+  };
+
+  const duplicateLine = (pageid, id1, id2) => {
+    pages[pageid].lines.forEach((line) => {
+      if (
+        (line[0] === id1 && line[1] === id2) ||
+        (line[1] === id1 && line[0] === id2)
+      ) {
+        return true;
+      }
+    });
+    return false;
   };
 
   const setValue = (pageid, cardid, value) => {
@@ -196,7 +218,7 @@ const Book = (props) => {
     ) {
       let list = [...pages];
       if (active === -1) {
-        list.push({ id: pages.length, title: "", cards: [] });
+        list.push({ id: pages.length, title: "", cards: [], lines: [] });
       } else {
         list[active]["cards"].push({
           id: list[active]["cards"].length,
