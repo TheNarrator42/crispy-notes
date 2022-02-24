@@ -129,6 +129,9 @@ const Book = (props) => {
   const handleDeleteCard = (pageid, id) => {
     let list = [...pages];
     list[pageid].cards = list[pageid].cards.filter((card) => card.id !== id);
+    list[pageid].lines = list[pageid].lines.filter(
+      (line) => line[0] !== id && line[1] !== id
+    );
     list[pageid].cards = list[pageid].cards.map((card) => ({
       id: card.id > id ? card.id - 1 : card.id,
       title: card.title,
@@ -137,7 +140,20 @@ const Book = (props) => {
       value: card.value,
       termlistValue: card.termlistValue,
     }));
-    console.log(list);
+    list[pageid].lines = list[pageid].lines.map((line) => {
+      let newLine = [];
+      if (line[0] > id) {
+        newLine.push(line[0] - 1);
+      } else {
+        newLine.push(line[0]);
+      }
+      if (line[1] > id) {
+        newLine.push(line[1] - 1);
+      } else {
+        newLine.push(line[1]);
+      }
+      return newLine;
+    });
     setPages(list);
   };
 
@@ -163,7 +179,7 @@ const Book = (props) => {
   const handleLine = (pageid, id) => {
     if (makingLine[0] === 0) {
       setMakingLine([1, id]);
-    } else {
+    } else if (makingLine[1] !== id) {
       const list = [...pages];
       if (!duplicateLine(pageid, makingLine[1], id)) {
         list[pageid].lines.push([makingLine[1], id]);
@@ -174,14 +190,16 @@ const Book = (props) => {
   };
 
   const duplicateLine = (pageid, id1, id2) => {
-    pages[pageid].lines.forEach((line) => {
+    let list = pages[pageid].lines;
+    for (let x = 0; x < list.length; x++) {
+      let line = list[x];
       if (
         (line[0] === id1 && line[1] === id2) ||
         (line[1] === id1 && line[0] === id2)
       ) {
         return true;
       }
-    });
+    }
     return false;
   };
 
