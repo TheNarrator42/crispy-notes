@@ -5,6 +5,9 @@
 
 .page-title {
   font-size: 30px;
+  font-family: sans-serif;
+  position: relative;
+  z-index: 1;
 }
 
 .cardview-container {
@@ -16,6 +19,7 @@
 .pageview-text {
   display: flex;
   font-size: 30px;
+  font-family: sans-serif;
   background: rgb(255, 255, 255);
 }
 

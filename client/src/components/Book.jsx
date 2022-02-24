@@ -1,7 +1,13 @@
 import { React, useState, useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Pagination from "react-bootstrap/Pagination";
-import { FaMousePointer, FaPlus, FaSlash, FaTrashAlt } from "react-icons/fa";
+import {
+  FaMousePointer,
+  FaPaintBrush,
+  FaPlus,
+  FaSlash,
+  FaTrashAlt,
+} from "react-icons/fa";
 import PageItem from "react-bootstrap/PageItem";
 
 import "../css/Book.css";
@@ -59,6 +65,14 @@ const Book = (props) => {
     >
       {<FaSlash size="1.5em" />}
     </PageItem>,
+    <PageItem
+      key={5}
+      active={option === 5}
+      disabled={pageActive}
+      onClick={() => setOption(5)}
+    >
+      {<FaPaintBrush size="1.5em" />}
+    </PageItem>,
   ];
 
   useHotkeys(
@@ -68,15 +82,6 @@ const Book = (props) => {
     },
     {},
     [pages]
-  );
-
-  useHotkeys(
-    "x",
-    () => {
-      console.log(makingLine);
-    },
-    {},
-    [makingLine]
   );
 
   useHotkeys("1", () => {
@@ -111,6 +116,16 @@ const Book = (props) => {
     },
     {},
     [pageActive, active]
+  );
+  useHotkeys(
+    "5",
+    () => {
+      if (!pageActive) {
+        setOption(5);
+      }
+    },
+    {},
+    [pageActive]
   );
 
   const handleUpdatePageActive = (value) => {
@@ -232,7 +247,8 @@ const Book = (props) => {
     if (
       option === 2 &&
       (e.target.className === "book-container" ||
-        e.target.className === "page-container")
+        e.target.className === "page-container" ||
+        e.target.className.baseVal === "lines-container")
     ) {
       let list = [...pages];
       if (active === -1) {
@@ -254,6 +270,16 @@ const Book = (props) => {
     }
   };
 
+  const handleLineClick = (id1, id2) => {
+    if (option === 3) {
+      const list = [...pages];
+      list[active].lines = list[active].lines.filter(
+        (line) => line[0] !== id1 || line[1] !== id2
+      );
+      setPages(list);
+    }
+  };
+
   return (
     <div className="full-container">
       <div className="book-container" onClick={onBackgroundClick}>
@@ -266,7 +292,10 @@ const Book = (props) => {
                 y1={pages[active].cards[line[0]].pos.y + 160}
                 x2={pages[active].cards[line[1]].pos.x + 186}
                 y2={pages[active].cards[line[1]].pos.y + 160}
-                style={{ stroke: "red", strokeWidth: 2 }}
+                style={{ stroke: "red", strokeWidth: 3 }}
+                onClick={() => {
+                  handleLineClick(line[0], line[1]);
+                }}
               />
             ))}
           </svg>

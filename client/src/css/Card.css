@@ -25,6 +25,8 @@
   resize: none;
   width: 15%;
   min-height: 830px;
+  background: inherit;
+  margin-left: 5px;
 }
 
 .cardview-content {
