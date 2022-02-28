@@ -20,6 +20,9 @@ const Book = (props) => {
   const [pages, setPages] = useState(props.pages);
   const [option, setOption] = useState(1);
   const [makingLine, setMakingLine] = useState([0, -1]);
+  const [color, setColor] = useState(props.color);
+  const [changingBackground, setChangingBackground] = useState(false);
+  const [clickCoords, setClickCoords] = useState([0, 0]);
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // useEffect(() => {
@@ -246,28 +249,34 @@ const Book = (props) => {
 
   const onBackgroundClick = (e) => {
     if (
-      option === 2 &&
-      (e.target.className === "book-container" ||
-        e.target.className === "page-container" ||
-        e.target.className.baseVal === "lines-container")
+      e.target.className === "book-container" ||
+      e.target.className === "page-container" ||
+      e.target.className.baseVal === "lines-container"
     ) {
-      let list = [...pages];
-      if (active === -1) {
-        list.push({ id: pages.length, title: "", cards: [], lines: [] });
-      } else {
-        list[active]["cards"].push({
-          id: list[active]["cards"].length,
-          title: "",
-          color: "yellow",
-          pos: {
-            x: 0,
-            y: 0,
-          },
-          value: "",
-          termlistValue: "",
-        });
+      if (option === 2) {
+        let list = [...pages];
+        if (active === -1) {
+          list.push({ id: pages.length, title: "", cards: [], lines: [] });
+        } else {
+          list[active]["cards"].push({
+            id: list[active]["cards"].length,
+            title: "",
+            color: "yellow",
+            pos: {
+              x: 0,
+              y: 0,
+            },
+            value: "",
+            termlistValue: "",
+          });
+        }
+        setPages(list);
+      } else if (option === 5) {
+        if (!changingBackground) {
+          setClickCoords([e.clientX, e.clientY]);
+        }
+        setChangingBackground(!changingBackground);
       }
-      setPages(list);
     }
   };
 
@@ -281,11 +290,15 @@ const Book = (props) => {
     }
   };
 
+  const handleBackgroundChange = (color, e) => {
+    setColor(color.hex);
+  };
+
   return (
     <div
       className="full-container"
       style={{
-        background: props.color,
+        background: color,
       }}
     >
       <div className="book-container" onClick={onBackgroundClick}>
@@ -326,8 +339,15 @@ const Book = (props) => {
           />
         ))}
       </div>
-      {/* <Pagination>{toolbar}</Pagination> */}
-      <GithubPicker />
+      {changingBackground && (
+        <GithubPicker
+          // color={color}
+          colors={["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff"]}
+          width="137px"
+          onChange={handleBackgroundChange}
+        />
+      )}
+      <Pagination>{toolbar}</Pagination>
     </div>
   );
 };
