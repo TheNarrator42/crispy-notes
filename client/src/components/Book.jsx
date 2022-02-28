@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Pagination from "react-bootstrap/Pagination";
+import { GithubPicker } from "react-color";
 import {
   FaMousePointer,
   FaPaintBrush,
@@ -281,7 +282,12 @@ const Book = (props) => {
   };
 
   return (
-    <div className="full-container">
+    <div
+      className="full-container"
+      style={{
+        background: props.color,
+      }}
+    >
       <div className="book-container" onClick={onBackgroundClick}>
         {active !== -1 && !pageActive && (
           <svg className="lines-container" height="100vh" width="100vw">
@@ -320,7 +326,8 @@ const Book = (props) => {
           />
         ))}
       </div>
-      <Pagination>{toolbar}</Pagination>
+      {/* <Pagination>{toolbar}</Pagination> */}
+      <GithubPicker />
     </div>
   );
 };

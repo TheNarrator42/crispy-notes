@@ -6,7 +6,7 @@ import Book from './components/Book';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
-  <Book pages={[
+  <Book color="rgb(255, 223, 186)" pages={[
   {id: 0, title: "Biology", cards: [
     {id: 0, title: "Mitochondria", color: "rgb(255,179,186)", pos: {
       x: 500, y: 500
