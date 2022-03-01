@@ -42,14 +42,26 @@ const Book = (props) => {
   }, [active, pageActive]);
 
   const toolbar = [
-    <PageItem key={1} active={option === 1} onClick={() => setOption(1)}>
+    <PageItem
+      key={1}
+      active={option === 1}
+      onClick={() => {
+        setOption(1);
+        setMakingLine([0, -1]);
+        setChangingBackground(false);
+      }}
+    >
       {<FaMousePointer size="1.5em" />}
     </PageItem>,
     <PageItem
       key={2}
       active={option === 2}
       disabled={pageActive}
-      onClick={() => setOption(2)}
+      onClick={() => {
+        setOption(2);
+        setMakingLine([0, -1]);
+        setChangingBackground(false);
+      }}
     >
       {<FaPlus size="1.5em" />}
     </PageItem>,
@@ -57,7 +69,11 @@ const Book = (props) => {
       key={3}
       active={option === 3}
       disabled={pageActive}
-      onClick={() => setOption(3)}
+      onClick={() => {
+        setOption(3);
+        setMakingLine([0, -1]);
+        setChangingBackground(false);
+      }}
     >
       {<FaTrashAlt size="1.5em" />}
     </PageItem>,
@@ -65,7 +81,10 @@ const Book = (props) => {
       key={4}
       active={option === 4}
       disabled={active === -1 || pageActive}
-      onClick={() => setOption(4)}
+      onClick={() => {
+        setOption(4);
+        setChangingBackground(false);
+      }}
     >
       {<FaSlash size="1.5em" />}
     </PageItem>,
@@ -73,7 +92,10 @@ const Book = (props) => {
       key={5}
       active={option === 5}
       disabled={pageActive}
-      onClick={() => setOption(5)}
+      onClick={() => {
+        setOption(5);
+        setMakingLine([0, -1]);
+      }}
     >
       {<FaPaintBrush size="1.5em" />}
     </PageItem>,
@@ -90,45 +112,45 @@ const Book = (props) => {
 
   useHotkeys("1", () => {
     setOption(1);
+    setMakingLine([0, -1]);
+    setChangingBackground(false);
   });
   useHotkeys(
     "2",
     () => {
-      if (!pageActive) {
-        setOption(2);
-      }
+      setOption(2);
+      setMakingLine([0, -1]);
+      setChangingBackground(false);
     },
-    {},
+    { enabled: !pageActive },
     [pageActive]
   );
   useHotkeys(
     "3",
     () => {
-      if (!pageActive) {
-        setOption(3);
-      }
+      setOption(3);
+      setMakingLine([0, -1]);
+      setChangingBackground(false);
     },
-    {},
+    { enabled: !pageActive },
     [pageActive]
   );
   useHotkeys(
     "4",
     () => {
-      if (!pageActive && active !== -1) {
-        setOption(4);
-      }
+      setOption(4);
+      setChangingBackground(false);
     },
-    {},
+    { enabled: !pageActive && active !== -1 },
     [pageActive, active]
   );
   useHotkeys(
     "5",
     () => {
-      if (!pageActive) {
-        setOption(5);
-      }
+      setOption(5);
+      setMakingLine([0, -1]);
     },
-    {},
+    { enabled: !pageActive },
     [pageActive]
   );
 
@@ -189,6 +211,8 @@ const Book = (props) => {
           cards: page.cards,
         }));
         setPages(list);
+      } else if (option === 5) {
+        //do things
       } else {
         setActive(id);
       }
@@ -340,12 +364,29 @@ const Book = (props) => {
         ))}
       </div>
       {changingBackground && (
-        <GithubPicker
-          // color={color}
-          colors={["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff"]}
-          width="137px"
-          onChange={handleBackgroundChange}
-        />
+        <div
+          style={{
+            position: "absolute",
+            left:
+              clickCoords[0] - 15 > 0
+                ? clickCoords[0] - 15 < window.innerWidth - 137
+                  ? clickCoords[0] - 15
+                  : window.innerWidth - 137
+                : 0,
+            top:
+              clickCoords[1] + 30 < window.innerHeight - 57
+                ? clickCoords[1] + 30
+                : window.innerHeight - 57,
+            zIndex: 4,
+          }}
+        >
+          <GithubPicker
+            // color={color}
+            colors={["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff"]}
+            width="137px"
+            onChange={handleBackgroundChange}
+          />
+        </div>
       )}
       <Pagination>{toolbar}</Pagination>
     </div>
