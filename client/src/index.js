@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   <Book color="rgb(255, 223, 186)" pages={[
-  {id: 0, title: "Biology", cards: [
+  {id: 0, title: "Biology", color: "rgb(255,255,186)", cards: [
     {id: 0, title: "Mitochondria", color: "rgb(255,179,186)", pos: {
       x: 500, y: 500
     }, value: "", termlistValue: ""},
@@ -18,7 +18,7 @@ ReactDOM.render(
       x: 40, y: 30
     }, value: "", termlistValue: ""}
   ], lines: [[0, 1], [0, 2], [1, 2]]}, 
-  {id: 1, title: "Chemistry", cards: [
+  {id: 1, title: "Chemistry", color: "rgb(255,255,186)", cards: [
     {id: 0, title: "Elements", color: "rgb(255,179,186)", pos: {
       x: 500, y: 500
     }, value: "", termlistValue: ""},

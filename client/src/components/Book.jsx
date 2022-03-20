@@ -22,6 +22,8 @@ const Book = (props) => {
   const [makingLine, setMakingLine] = useState([0, -1]);
   const [color, setColor] = useState(props.color);
   const [changingBackground, setChangingBackground] = useState(false);
+  const [changingPageviewColor, setChangingPageviewColor] = useState(-1);
+  const [changingCardviewColor, setChangingCardviewColor] = useState(-1);
   const [clickCoords, setClickCoords] = useState([0, 0]);
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -49,6 +51,8 @@ const Book = (props) => {
         setOption(1);
         setMakingLine([0, -1]);
         setChangingBackground(false);
+        setChangingPageviewColor(-1);
+        setChangingCardviewColor(-1);
       }}
     >
       {<FaMousePointer size="1.5em" />}
@@ -61,6 +65,8 @@ const Book = (props) => {
         setOption(2);
         setMakingLine([0, -1]);
         setChangingBackground(false);
+        setChangingPageviewColor(-1);
+        setChangingCardviewColor(-1);
       }}
     >
       {<FaPlus size="1.5em" />}
@@ -73,6 +79,8 @@ const Book = (props) => {
         setOption(3);
         setMakingLine([0, -1]);
         setChangingBackground(false);
+        setChangingPageviewColor(-1);
+        setChangingCardviewColor(-1);
       }}
     >
       {<FaTrashAlt size="1.5em" />}
@@ -84,6 +92,8 @@ const Book = (props) => {
       onClick={() => {
         setOption(4);
         setChangingBackground(false);
+        setChangingPageviewColor(-1);
+        setChangingCardviewColor(-1);
       }}
     >
       {<FaSlash size="1.5em" />}
@@ -109,11 +119,21 @@ const Book = (props) => {
     {},
     [pages]
   );
+  useHotkeys(
+    "x",
+    () => {
+      console.log(changingCardviewColor);
+    },
+    {},
+    [changingCardviewColor]
+  );
 
   useHotkeys("1", () => {
     setOption(1);
     setMakingLine([0, -1]);
     setChangingBackground(false);
+    setChangingPageviewColor(-1);
+    setChangingCardviewColor(-1);
   });
   useHotkeys(
     "2",
@@ -121,6 +141,8 @@ const Book = (props) => {
       setOption(2);
       setMakingLine([0, -1]);
       setChangingBackground(false);
+      setChangingPageviewColor(-1);
+      setChangingCardviewColor(-1);
     },
     { enabled: !pageActive },
     [pageActive]
@@ -131,6 +153,8 @@ const Book = (props) => {
       setOption(3);
       setMakingLine([0, -1]);
       setChangingBackground(false);
+      setChangingPageviewColor(-1);
+      setChangingCardviewColor(-1);
     },
     { enabled: !pageActive },
     [pageActive]
@@ -140,6 +164,8 @@ const Book = (props) => {
     () => {
       setOption(4);
       setChangingBackground(false);
+      setChangingPageviewColor(-1);
+      setChangingCardviewColor(-1);
     },
     { enabled: !pageActive && active !== -1 },
     [pageActive, active]
@@ -208,11 +234,16 @@ const Book = (props) => {
         list = list.map((page) => ({
           id: page.id > id ? page.id - 1 : page.id,
           title: page.title,
+          color: page.color,
           cards: page.cards,
         }));
         setPages(list);
       } else if (option === 5) {
-        //do things
+        if (changingPageviewColor === -1) {
+          setChangingPageviewColor(id);
+        } else {
+          setChangingPageviewColor(-1);
+        }
       } else {
         setActive(id);
       }
@@ -318,6 +349,26 @@ const Book = (props) => {
     setColor(color.hex);
   };
 
+  const handlePageviewBackgroundChange = (id, color, e) => {
+    const list = [...pages];
+    list[id]["color"] = color.hex;
+    setPages(list);
+  };
+
+  const handleCardviewBackgroundChange = (pageid, cardid, color, e) => {
+    const list = [...pages];
+    list[pageid].cards[cardid]["color"] = color.hex;
+    setPages(list);
+  };
+
+  const handleUpdateCardviewPicker = (id) => {
+    if (changingCardviewColor === -1) {
+      setChangingCardviewColor(id);
+    } else {
+      setChangingCardviewColor(-1);
+    }
+  };
+
   return (
     <div
       className="full-container"
@@ -346,10 +397,13 @@ const Book = (props) => {
         {pages.map((page) => (
           <Page
             active={active}
+            color={page.color}
             cards={page.cards}
             id={page.id}
             key={page.id}
             title={page.title}
+            changingPageviewColor={changingPageviewColor}
+            changingCardviewColor={changingCardviewColor}
             handlePageviewClick={handlePageviewClick}
             handleLine={handleLine}
             setValue={setValue}
@@ -359,6 +413,9 @@ const Book = (props) => {
             handleSetPageTitle={handleSetPageTitle}
             handleDeleteCard={handleDeleteCard}
             handleUpdatePageActive={handleUpdatePageActive}
+            handlePageviewBackgroundChange={handlePageviewBackgroundChange}
+            handleCardviewBackgroundChange={handleCardviewBackgroundChange}
+            handleUpdateCardviewPicker={handleUpdateCardviewPicker}
             option={option}
           />
         ))}

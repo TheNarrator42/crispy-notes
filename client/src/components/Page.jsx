@@ -6,6 +6,7 @@ import { EditText } from "react-edit-text";
 
 import "../css/Page.css";
 import "react-edit-text/dist/index.css";
+import { GithubPicker } from "react-color";
 
 const Page = (props) => {
   const [active, setActive] = useState(-1);
@@ -25,7 +26,7 @@ const Page = (props) => {
         setDisplay(false);
         break;
     }
-  }, [props.active, expand, display, props.id]);
+  }, [props.active, expand, display, props.id, props.changingPageviewColor]);
 
   // useeffect props.option?
 
@@ -38,6 +39,8 @@ const Page = (props) => {
         props.handleDeleteCard(props.id, id);
       } else if (props.option === 4) {
         props.handleLine(props.id, id);
+      } else if (props.option === 5) {
+        props.handleUpdateCardviewPicker(id);
       } else {
         setActive(id);
         props.handleUpdatePageActive(id);
@@ -70,6 +73,7 @@ const Page = (props) => {
               pos={card.pos}
               value={card.value}
               termlistValue={card.termlistValue}
+              changingCardviewColor={props.changingCardviewColor}
               setValue={(id, value) => props.setValue(props.id, id, value)}
               setTitle={(id, title) => props.setTitle(props.id, id, title)}
               setTermlistValue={(id, termlistValue) =>
@@ -77,6 +81,9 @@ const Page = (props) => {
               }
               handleDrag={(id, data) => props.handleDrag(props.id, id, data)}
               handleCardviewClick={(id) => handleCardviewClick(id)}
+              handleCardviewBackgroundChange={(id, color, e) => {
+                props.handleCardviewBackgroundChange(props.id, id, color, e);
+              }}
             />
           </div>
         ))}
@@ -90,23 +97,44 @@ const Page = (props) => {
     );
   } else if (display) {
     return (
-      <div className="pageview-container">
-        <div className="pageview-text">
-          <EditText
-            key={props.title}
-            placeholder="title me!"
-            defaultValue={props.title}
-            onSave={(title) => {
-              props.handleSetPageTitle(title.value, props.id);
+      <div className="pageview-full-container">
+        <div className="pageview-container">
+          <div className="pageview-text">
+            <EditText
+              key={props.title}
+              placeholder="title me!"
+              defaultValue={props.title}
+              onSave={(title) => {
+                props.handleSetPageTitle(title.value, props.id);
+              }}
+            />
+          </div>
+          <div
+            className="pageview-body"
+            onClick={() => {
+              props.handlePageviewClick(props.id);
+            }}
+            style={{
+              background: props.color,
             }}
           />
         </div>
-        <div
-          className="pageview-body"
-          onClick={() => {
-            props.handlePageviewClick(props.id);
-          }}
-        />
+        {props.changingPageviewColor === props.id && (
+          <div
+            style={{
+              zIndex: 4,
+            }}
+          >
+            <GithubPicker
+              // color={color}
+              colors={["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff"]}
+              width="137px"
+              onChange={(color, e) => {
+                props.handlePageviewBackgroundChange(props.id, color, e);
+              }}
+            />
+          </div>
+        )}
       </div>
     );
   } else {
