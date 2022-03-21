@@ -10,21 +10,43 @@ import {
   FaTrashAlt,
 } from "react-icons/fa";
 import PageItem from "react-bootstrap/PageItem";
+import axios from "axios";
 
 import "../css/Book.css";
 import Page from "./Page";
 
 const Book = (props) => {
+  const getData = async () => {
+    await axios
+      .get(
+        "https://33a3ec2d-1447-4805-bbf6-5450509be122-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/rows",
+        {
+          headers: {
+            "x-cassandra-token":
+              "AstraCS:moCPnxZzBdnHjNZYfbsfrRYU:0126f59ad3a8f9b56c1eb80ab3be003322e8ee58405dd5794713ea7c320b8c16",
+            accept: "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data.data[0].color);
+      });
+  };
+
+  const getPages = async () => {
+    return [];
+  };
+
   const [active, setActive] = useState(-1);
   const [pageActive, setPageActive] = useState(false);
-  const [pages, setPages] = useState(props.pages);
   const [option, setOption] = useState(1);
   const [makingLine, setMakingLine] = useState([0, -1]);
-  const [color, setColor] = useState(props.color);
   const [changingBackground, setChangingBackground] = useState(false);
   const [changingPageviewColor, setChangingPageviewColor] = useState(-1);
   const [changingCardviewColor, setChangingCardviewColor] = useState(-1);
   const [clickCoords, setClickCoords] = useState([0, 0]);
+  const [pages, setPages] = useState(getPages());
+  const [color, setColor] = useState(getColor());
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // useEffect(() => {
