@@ -6,6 +6,7 @@ import "../css/Card.css";
 import "react-quill/dist/quill.snow.css";
 import BackButton from "./BackButton";
 import { EditText } from "react-edit-text";
+import { GithubPicker } from "react-color";
 
 const Card = (props) => {
   const [expand, setExpand] = useState(false);
@@ -95,7 +96,7 @@ const Card = (props) => {
         }}
         bounds={"body"}
       >
-        <div>
+        <div className="cardview-full-container">
           <div
             className="cardview-content"
             style={{
@@ -118,6 +119,22 @@ const Card = (props) => {
             />
             <div className="triangle" id="handle" />
           </div>
+          {props.changingCardviewColor === props.id && (
+            <div
+              style={{
+                zIndex: 4,
+              }}
+            >
+              <GithubPicker
+                // color={color}
+                colors={["#ffb3ba", "#ffdfba", "#ffffba", "#baffc9", "#bae1ff"]}
+                width="137px"
+                onChange={(color, e) => {
+                  props.handleCardviewBackgroundChange(props.id, color, e);
+                }}
+              />
+            </div>
+          )}
         </div>
       </Draggable>
     );
