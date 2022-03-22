@@ -16,27 +16,6 @@ import "../css/Book.css";
 import Page from "./Page";
 
 const Book = (props) => {
-  const getData = async () => {
-    await axios
-      .get(
-        "https://33a3ec2d-1447-4805-bbf6-5450509be122-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/rows",
-        {
-          headers: {
-            "x-cassandra-token":
-              "AstraCS:moCPnxZzBdnHjNZYfbsfrRYU:0126f59ad3a8f9b56c1eb80ab3be003322e8ee58405dd5794713ea7c320b8c16",
-            accept: "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data.data[0].color);
-      });
-  };
-
-  const getPages = async () => {
-    return [];
-  };
-
   const [active, setActive] = useState(-1);
   const [pageActive, setPageActive] = useState(false);
   const [option, setOption] = useState(1);
@@ -45,8 +24,8 @@ const Book = (props) => {
   const [changingPageviewColor, setChangingPageviewColor] = useState(-1);
   const [changingCardviewColor, setChangingCardviewColor] = useState(-1);
   const [clickCoords, setClickCoords] = useState([0, 0]);
-  const [pages, setPages] = useState(getPages());
-  const [color, setColor] = useState(getColor());
+  const [pages, setPages] = useState([]);
+  const [color, setColor] = useState("white");
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // useEffect(() => {
@@ -58,6 +37,32 @@ const Book = (props) => {
   //   };
   //   window.addEventListener("mousemove", onMouseMove);
   // }, []);
+
+  const getData = async () => {
+    await axios
+      .get(
+        "https://33a3ec2d-1447-4805-bbf6-5450509be122-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/0",
+        {
+          headers: {
+            "x-cassandra-token":
+              "AstraCS:moCPnxZzBdnHjNZYfbsfrRYU:0126f59ad3a8f9b56c1eb80ab3be003322e8ee58405dd5794713ea7c320b8c16",
+            accept: "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setColor(res.data.data[0].color);
+        setPages(JSON.parse(res.data.data[0].pages));
+      });
+  };
+
+  const sendData = async () => {
+    await axios.post();
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   useEffect(() => {
     if (active === -1 || pageActive) {
@@ -149,6 +154,9 @@ const Book = (props) => {
     {},
     [changingCardviewColor]
   );
+  useHotkeys("ctrl+s", () => {
+    sendData();
+  });
 
   useHotkeys("1", () => {
     setOption(1);
