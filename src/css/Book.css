@@ -23,3 +23,7 @@
   left: 0;
   top: 0;
 }
+
+.toast-container {
+  margin: 20px;
+}

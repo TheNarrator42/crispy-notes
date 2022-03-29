@@ -10,10 +10,12 @@ import {
   FaTrashAlt,
 } from "react-icons/fa";
 import PageItem from "react-bootstrap/PageItem";
+import Toast from "react-bootstrap/Toast";
 import axios from "axios";
 
 import "../css/Book.css";
 import Page from "./Page";
+import { ToastContainer } from "react-bootstrap";
 
 const Book = (props) => {
   const [active, setActive] = useState(-1);
@@ -26,6 +28,7 @@ const Book = (props) => {
   const [clickCoords, setClickCoords] = useState([0, 0]);
   const [pages, setPages] = useState([]);
   const [color, setColor] = useState("white");
+  const [showToast, setShowToast] = useState(false);
   // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // useEffect(() => {
@@ -57,7 +60,25 @@ const Book = (props) => {
   };
 
   const sendData = async () => {
-    await axios.post();
+    await axios
+      .put(
+        "https://33a3ec2d-1447-4805-bbf6-5450509be122-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/0",
+        {
+          color: color,
+          pages: JSON.stringify(pages),
+        },
+        {
+          headers: {
+            "x-cassandra-token":
+              "AstraCS:moCPnxZzBdnHjNZYfbsfrRYU:0126f59ad3a8f9b56c1eb80ab3be003322e8ee58405dd5794713ea7c320b8c16",
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setShowToast(true);
+      });
   };
 
   useEffect(() => {
@@ -154,9 +175,14 @@ const Book = (props) => {
     {},
     [changingCardviewColor]
   );
-  useHotkeys("ctrl+s", () => {
-    sendData();
-  });
+  useHotkeys(
+    "ctrl+alt+s",
+    () => {
+      sendData();
+    },
+    {},
+    [color, pages]
+  );
 
   useHotkeys("1", () => {
     setOption(1);
@@ -476,6 +502,19 @@ const Book = (props) => {
         </div>
       )}
       <Pagination>{toolbar}</Pagination>
+      <ToastContainer className="toast-container" position="bottom-end">
+        <Toast
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          delay={3000}
+          autohide
+        >
+          <Toast.Header closeButton={false}>
+            <strong>Success!</strong>
+          </Toast.Header>
+          <Toast.Body>Saved successfully!</Toast.Body>
+        </Toast>
+      </ToastContainer>
     </div>
   );
 };
