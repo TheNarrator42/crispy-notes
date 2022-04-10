@@ -15,7 +15,8 @@ import axios from "axios";
 
 import "../css/Book.css";
 import Page from "./Page";
-import { ToastContainer } from "react-bootstrap";
+import { Image, ToastContainer } from "react-bootstrap";
+import Logout from "./Logout";
 
 const Book = (props) => {
   const [active, setActive] = useState(-1);
@@ -41,28 +42,31 @@ const Book = (props) => {
   //   window.addEventListener("mousemove", onMouseMove);
   // }, []);
 
-  const getData = async () => {
+  const url =
+    "https://33a3ec2d-1447-4805-bbf6-5450509be122-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/" +
+    props.user.googleId;
+
+  const getData = async (url) => {
     await axios
-      .get(
-        "https://33a3ec2d-1447-4805-bbf6-5450509be122-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/0",
-        {
-          headers: {
-            "x-cassandra-token":
-              "AstraCS:moCPnxZzBdnHjNZYfbsfrRYU:0126f59ad3a8f9b56c1eb80ab3be003322e8ee58405dd5794713ea7c320b8c16",
-            accept: "application/json",
-          },
-        }
-      )
+      .get(url, {
+        headers: {
+          "x-cassandra-token":
+            "AstraCS:moCPnxZzBdnHjNZYfbsfrRYU:0126f59ad3a8f9b56c1eb80ab3be003322e8ee58405dd5794713ea7c320b8c16",
+          accept: "application/json",
+        },
+      })
       .then((res) => {
-        setColor(res.data.data[0].color);
-        setPages(JSON.parse(res.data.data[0].pages));
+        if (res.data.data.length !== 0) {
+          setColor(res.data.data[0].color);
+          setPages(JSON.parse(res.data.data[0].pages));
+        }
       });
   };
 
   const sendData = async () => {
     await axios
       .put(
-        "https://33a3ec2d-1447-4805-bbf6-5450509be122-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/0",
+        url,
         {
           color: color,
           pages: JSON.stringify(pages),
@@ -82,8 +86,8 @@ const Book = (props) => {
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    getData(url);
+  }, [url]);
 
   useEffect(() => {
     if (active === -1 || pageActive) {
@@ -166,14 +170,6 @@ const Book = (props) => {
     },
     {},
     [pages]
-  );
-  useHotkeys(
-    "x",
-    () => {
-      console.log(changingCardviewColor);
-    },
-    {},
-    [changingCardviewColor]
   );
   useHotkeys(
     "ctrl+alt+s",
@@ -292,6 +288,7 @@ const Book = (props) => {
           title: page.title,
           color: page.color,
           cards: page.cards,
+          lines: page.lines,
         }));
         setPages(list);
       } else if (option === 5) {
@@ -432,17 +429,26 @@ const Book = (props) => {
         background: color,
       }}
     >
-      <div className="book-container" onClick={onBackgroundClick}>
+      <div className="toolbar-container">
+        <Pagination>{toolbar}</Pagination>
+      </div>
+      <div
+        className="book-container"
+        onClick={onBackgroundClick}
+        style={{
+          display: active === -1 ? "grid" : "flex",
+        }}
+      >
         {active !== -1 && !pageActive && (
           <svg className="lines-container" height="100vh" width="100vw">
             {pages[active].lines.map((line) => (
               <line
                 key={[line[0], line[1]]}
                 x1={pages[active].cards[line[0]].pos.x + 186}
-                y1={pages[active].cards[line[0]].pos.y + 160}
+                y1={pages[active].cards[line[0]].pos.y + 250}
                 x2={pages[active].cards[line[1]].pos.x + 186}
-                y2={pages[active].cards[line[1]].pos.y + 160}
-                style={{ stroke: "red", strokeWidth: 3 }}
+                y2={pages[active].cards[line[1]].pos.y + 250}
+                style={{ stroke: "#8fbbaf", strokeWidth: 3 }}
                 onClick={() => {
                   handleLineClick(line[0], line[1]);
                 }}
@@ -501,7 +507,6 @@ const Book = (props) => {
           />
         </div>
       )}
-      <Pagination>{toolbar}</Pagination>
       <ToastContainer className="toast-container" position="bottom-end">
         <Toast
           show={showToast}
@@ -515,6 +520,15 @@ const Book = (props) => {
           <Toast.Body>Saved successfully!</Toast.Body>
         </Toast>
       </ToastContainer>
+      <div className="pfp-container">
+        <Image
+          src={props.user.imageUrl}
+          referrerPolicy="no-referrer"
+          roundedCircle
+          fluid
+        />
+      </div>
+      <Logout onLogoutSuccess={props.onLogoutSuccess} />
     </div>
   );
 };

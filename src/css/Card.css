@@ -35,11 +35,13 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-
+  border: 1px solid #6c757d;
+  border-radius: 0.5rem;
   /* position: absolute; */
   width: 333px;
   height: 200px;
   z-index: 1;
+  cursor: pointer;
 }
 
 .cardview-text {
@@ -70,9 +72,11 @@
   height: 0;
   border: solid 30px;
   border-color: transparent black black transparent;
+  border-radius: 0 0 0.5rem 0;
   position: absolute;
   right: 0;
   top: 140px;
+  cursor: grab;
 }
 
 .ql-editor {

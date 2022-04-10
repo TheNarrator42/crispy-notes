@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import { Button } from "react-bootstrap";
 import { FaArrowLeft } from "react-icons/fa";
 
 import "../css/BackButton.css";
@@ -12,8 +13,10 @@ const BackButton = (props) => {
 
   return (
     visible && (
-      <div className="backbutton" onClick={props.onClick}>
-        <FaArrowLeft size="1.5em" />
+      <div className="backbutton">
+        <Button variant="light" size="sm" onClick={props.onClick}>
+          <FaArrowLeft size="1.5em" />
+        </Button>
       </div>
     )
   );

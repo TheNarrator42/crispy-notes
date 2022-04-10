@@ -1,0 +1,17 @@
+.button-div{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 10px;
+}
+
+.btn-light {
+  background-color: #B19CD8;
+  color: white;
+  border-color: white;
+}
+
+.btn-sm {
+  width: 50px;
+  height: 40.5px;
+}

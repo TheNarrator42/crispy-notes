@@ -2,24 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Book from './components/Book';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Notespace from './components/Notespace';
 
 ReactDOM.render(
-  <Book/>,
-
-// <Page title = "Biology" cards = {[
-//   {title: "Mitochondria", color: "orange", pos: {
-//     x: 500, y: 500
-//   }},
-//   {title: "Chloroplast", color: "green", pos: {
-//     x: 900, y: 0
-//   }},
-//   {title: "Nucleus", color: "blue", pos: {
-//     x: 40, y: 1000
-//   }}
-// ]}/>,
-
+  <Notespace />,
 document.getElementById('root')
 );
 
