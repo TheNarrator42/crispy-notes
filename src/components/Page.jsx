@@ -35,11 +35,11 @@ const Page = (props) => {
       setActive(id);
       props.handleUpdatePageActive(id);
     } else {
-      if (props.option === 3) {
+      if (props.option === 2) {
         props.handleDeleteCard(props.id, id);
-      } else if (props.option === 4) {
+      } else if (props.option === 3) {
         props.handleLine(props.id, id);
-      } else if (props.option === 5) {
+      } else if (props.option === 4) {
         props.handleUpdateCardviewPicker(id);
       } else {
         setActive(id);

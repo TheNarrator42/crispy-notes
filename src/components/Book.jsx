@@ -15,7 +15,7 @@ import axios from "axios";
 
 import "../css/Book.css";
 import Page from "./Page";
-import { Image, ToastContainer } from "react-bootstrap";
+import { Button, Image, ToastContainer } from "react-bootstrap";
 import Logout from "./Logout";
 
 const Book = (props) => {
@@ -121,28 +121,14 @@ const Book = (props) => {
         setChangingCardviewColor(-1);
       }}
     >
-      {<FaPlus size="1.5em" />}
+      {<FaTrashAlt size="1.5em" />}
     </PageItem>,
     <PageItem
       key={3}
       active={option === 3}
-      disabled={pageActive}
-      onClick={() => {
-        setOption(3);
-        setMakingLine([0, -1]);
-        setChangingBackground(false);
-        setChangingPageviewColor(-1);
-        setChangingCardviewColor(-1);
-      }}
-    >
-      {<FaTrashAlt size="1.5em" />}
-    </PageItem>,
-    <PageItem
-      key={4}
-      active={option === 4}
       disabled={active === -1 || pageActive}
       onClick={() => {
-        setOption(4);
+        setOption(3);
         setChangingBackground(false);
         setChangingPageviewColor(-1);
         setChangingCardviewColor(-1);
@@ -151,11 +137,11 @@ const Book = (props) => {
       {<FaSlash size="1.5em" />}
     </PageItem>,
     <PageItem
-      key={5}
-      active={option === 5}
+      key={4}
+      active={option === 4}
       disabled={pageActive}
       onClick={() => {
-        setOption(5);
+        setOption(4);
         setMakingLine([0, -1]);
       }}
     >
@@ -203,18 +189,6 @@ const Book = (props) => {
     "3",
     () => {
       setOption(3);
-      setMakingLine([0, -1]);
-      setChangingBackground(false);
-      setChangingPageviewColor(-1);
-      setChangingCardviewColor(-1);
-    },
-    { enabled: !pageActive },
-    [pageActive]
-  );
-  useHotkeys(
-    "4",
-    () => {
-      setOption(4);
       setChangingBackground(false);
       setChangingPageviewColor(-1);
       setChangingCardviewColor(-1);
@@ -223,9 +197,9 @@ const Book = (props) => {
     [pageActive, active]
   );
   useHotkeys(
-    "5",
+    "4",
     () => {
-      setOption(5);
+      setOption(4);
       setMakingLine([0, -1]);
     },
     { enabled: !pageActive },
@@ -280,7 +254,7 @@ const Book = (props) => {
     if (id === -1) {
       setActive(id);
     } else {
-      if (option === 3) {
+      if (option === 2) {
         let list = [...pages];
         list = list.filter((page) => page.id !== id);
         list = list.map((page) => ({
@@ -291,7 +265,7 @@ const Book = (props) => {
           lines: page.lines,
         }));
         setPages(list);
-      } else if (option === 5) {
+      } else if (option === 4) {
         if (changingPageviewColor === -1) {
           setChangingPageviewColor(id);
         } else {
@@ -357,39 +331,40 @@ const Book = (props) => {
 
   const onBackgroundClick = (e) => {
     if (
-      e.target.className === "book-container" ||
-      e.target.className === "page-container" ||
-      e.target.className.baseVal === "lines-container"
+      (e.target.className === "book-container" ||
+        e.target.className === "page-container" ||
+        e.target.className.baseVal === "lines-container") &&
+      option === 4
     ) {
-      if (option === 2) {
-        let list = [...pages];
-        if (active === -1) {
-          list.push({ id: pages.length, title: "", cards: [], lines: [] });
-        } else {
-          list[active]["cards"].push({
-            id: list[active]["cards"].length,
-            title: "",
-            color: "yellow",
-            pos: {
-              x: 0,
-              y: 0,
-            },
-            value: "",
-            termlistValue: "",
-          });
-        }
-        setPages(list);
-      } else if (option === 5) {
-        if (!changingBackground) {
-          setClickCoords([e.clientX, e.clientY]);
-        }
-        setChangingBackground(!changingBackground);
+      if (!changingBackground) {
+        setClickCoords([e.clientX, e.clientY]);
       }
+      setChangingBackground(!changingBackground);
     }
   };
 
+  const handleAdd = () => {
+    let list = [...pages];
+    if (active === -1) {
+      list.push({ id: pages.length, title: "", cards: [], lines: [] });
+    } else {
+      list[active]["cards"].push({
+        id: list[active]["cards"].length,
+        title: "",
+        color: "ffffba",
+        pos: {
+          x: 0,
+          y: 0,
+        },
+        value: "",
+        termlistValue: "",
+      });
+    }
+    setPages(list);
+  };
+
   const handleLineClick = (id1, id2) => {
-    if (option === 3) {
+    if (option === 2) {
       const list = [...pages];
       list[active].lines = list[active].lines.filter(
         (line) => line[0] !== id1 || line[1] !== id2
@@ -444,9 +419,9 @@ const Book = (props) => {
             {pages[active].lines.map((line) => (
               <line
                 key={[line[0], line[1]]}
-                x1={pages[active].cards[line[0]].pos.x + 186}
+                x1={pages[active].cards[line[0]].pos.x + 190}
                 y1={pages[active].cards[line[0]].pos.y + 250}
-                x2={pages[active].cards[line[1]].pos.x + 186}
+                x2={pages[active].cards[line[1]].pos.x + 190}
                 y2={pages[active].cards[line[1]].pos.y + 250}
                 style={{ stroke: "#8fbbaf", strokeWidth: 3 }}
                 onClick={() => {
@@ -528,6 +503,13 @@ const Book = (props) => {
           fluid
         />
       </div>
+      {!pageActive && (
+        <div className="add-button-container">
+          <Button variant="light" size="sm" onClick={handleAdd}>
+            <FaPlus size="1.5em" />
+          </Button>
+        </div>
+      )}
       <Logout onLogoutSuccess={props.onLogoutSuccess} />
     </div>
   );

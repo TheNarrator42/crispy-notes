@@ -12,3 +12,9 @@
   width: 50px;
   height: 40.5px;
 }
+
+.btn-light {
+  background-color: #B19CD8;
+  color: white;
+  border-color: white;
+}
