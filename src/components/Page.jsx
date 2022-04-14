@@ -123,6 +123,8 @@ const Page = (props) => {
           <div
             style={{
               zIndex: 4,
+              position: "absolute",
+              top: Math.floor((props.id + 1) / 9) * 200 + 280 + "px",
             }}
           >
             <GithubPicker
