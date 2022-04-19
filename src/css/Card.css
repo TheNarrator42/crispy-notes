@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200&display=swap');
+
 .card-container {
   width: 100%;
 }
@@ -7,7 +9,7 @@
 }
 
 .card-title {
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
   font-size: 30px;
   resize: none;
   text-align: center;
@@ -20,7 +22,7 @@
 }
 
 .card-term-list {
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
   font-size: 20px;
   resize: none;
   width: 15%;
@@ -46,7 +48,7 @@
 
 .cardview-text {
   font-weight: bold;
-  font-family: Geneva;
+  /* font-family: Geneva; */
   font-size: 50px;
   overflow: hidden;
   display: -webkit-box;
@@ -81,6 +83,7 @@
 
 .ql-editor {
   min-height: 720px;
+  font-family: "IBM Plex Sans";
 }
 
 /*

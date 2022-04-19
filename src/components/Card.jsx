@@ -78,7 +78,7 @@ const Card = (props) => {
           className="card-term-list"
           rows="30"
           cols="5"
-          placeholder="enter key terms here, 1 per line"
+          placeholder="enter key terms here"
           onChange={(e) => props.setTermlistValue(props.id, e.target.value)}
           value={props.termlistValue}
         />
