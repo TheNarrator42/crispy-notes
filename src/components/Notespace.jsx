@@ -5,7 +5,7 @@ import Login from "./Login";
 import "../css/Notespace.css";
 
 const Notespace = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); //keep track of user that is logged in
 
   if (user === null) {
     return (
@@ -22,11 +22,12 @@ const Notespace = () => {
           <p>+ in bottom left to add a new page/card, logout in bottom right</p>
           <p>titles are editable, cards are draggable</p>
         </div>
-        <Login onLoginSuccess={(u) => setUser(u)} />
+        <Login onLoginSuccess={(u) => setUser(u)} />{" "}
+        {/* login button to set current user */}
       </div>
     );
   } else {
-    return <Book user={user} onLogoutSuccess={() => setUser(null)} />;
+    return <Book user={user} onLogoutSuccess={() => setUser(null)} />; //show the main app if you're actually logged in
   }
 };
 

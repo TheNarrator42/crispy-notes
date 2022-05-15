@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Notespace from './components/Notespace';
 
 ReactDOM.render(
-  <Notespace />,
+  <Notespace />, //main app
 document.getElementById('root')
 );
 

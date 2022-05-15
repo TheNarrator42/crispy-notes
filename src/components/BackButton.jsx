@@ -5,6 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import "../css/BackButton.css";
 
 const BackButton = (props) => {
+  //button to return to previous page
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -14,6 +15,7 @@ const BackButton = (props) => {
   return (
     visible && (
       <div className="backbutton">
+        {/* onClick is passed from parent */}
         <Button variant="light" size="sm" onClick={props.onClick}>
           <FaArrowLeft size="1.5em" />
         </Button>
