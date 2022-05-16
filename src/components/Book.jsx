@@ -43,7 +43,7 @@ const Book = (props) => {
   // }, []);
 
   const url =
-    "https://33a3ec2d-1447-4805-bbf6-5450509be122-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/" + //database url
+    "https://7c184af5-4034-49f0-a425-666c39502e7d-us-east1.apps.astra.datastax.com/api/rest/v2/keyspaces/note/stuff/" + //database url
     props.user.googleId;
 
   const getData = async (url) => {
